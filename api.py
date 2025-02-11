@@ -33,9 +33,9 @@ def predict():
         class_name = iris.target_names[prediction]  # Nom de la classe (Setosa, Versicolor, Virginica)
 
         response = {
-            "predicted_class": int(prediction),
-            "class_name": class_name,
-            "svm_accuracy": round(accuracy, 2)  # Formatté à 2 décimales
+            "model_name": "SVM",
+            "predicted_class": class_name,
+            "accuracy": round(accuracy, 2)  # Formatté à 2 décimales
         }
 
         return jsonify(response)
