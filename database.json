@@ -1,0 +1,12 @@
+{
+    "models": [
+        {
+            "id": "lisa",
+            "weight": 1.0
+        },
+        {
+            "id": "leina",
+            "weight": 1.0
+        }
+    ]
+}
