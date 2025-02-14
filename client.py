@@ -14,8 +14,8 @@ model_weights = {model["id"]: model["weight"] for model in database["models"]}
 
 # 🔗 URLs des APIs des participants (sans paramètres)
 api_urls = {
-    "lisa": "https://ec82-2a01-cb00-18d-a500-7050-6c92-4352-4208.ngrok-free.app/predict",
-    "leina": "https://02ff-185-20-16-26.ngrok-free.app/predict"
+    "lisa": "https://44e6-89-30-29-68.ngrok-free.app/predict",
+    "leina": "https://513c-89-30-29-68.ngrok-free.app/predict"
 }
 
 # Fonction pour interroger une API et récupérer la prédiction
@@ -23,7 +23,7 @@ def get_prediction(api_url, features):
     try:
         response = requests.get(api_url, params=features)
         data = response.json()
-        return data["predicted_class"]
+        return data["predicted_class"]  # On récupère le nom de la classe ("setosa", "versicolor", "virginica")
     except Exception as e:
         print(f"⚠️ Erreur avec {api_url}: {e}")
         return None
@@ -49,12 +49,14 @@ for i, sample in enumerate(X_test):
 
     weighted_predictions = {}  # Stocker les prédictions pondérées
     sum_weights = 0
+    all_predictions = []  # Stocker les prédictions pour affichage
 
     for model_id, url in api_urls.items():
         result = get_prediction(url, features)
         if result is not None:
             # ⚡ Convertir le nom de classe en entier (ex: "setosa" -> 0)
             class_index = list(iris.target_names).index(result)
+            all_predictions.append(class_index)  # Stocker la prédiction brute pour affichage
 
             # 🔢 Appliquer la pondération
             weight = model_weights.get(model_id, 1.0)  # Valeur par défaut = 1.0 si le modèle n'existe pas dans database.json
@@ -68,12 +70,16 @@ for i, sample in enumerate(X_test):
     if weighted_predictions:
         # 🏆 Déterminer la classe avec le score pondéré le plus élevé
         final_prediction = max(weighted_predictions, key=weighted_predictions.get)
+
+        # ✅ Comparer directement les indices (0,1,2) sans conversion inutile
         if final_prediction == y_test[i]:
             correct += 1
 
 # 📊 Calculer la nouvelle précision
 accuracy = correct / total
 print(f"✅ Précision du méta-modèle de consensus pondéré : {accuracy:.2f}")
+print(f"📊 Poids actuels des modèles : {model_weights}")
+print(f"📊 Prédictions individuelles reçues : {all_predictions}")
 
 # 🔄 Mise à jour des poids des modèles en fonction des bonnes prédictions
 for model_id in model_correct_counts:
