@@ -2,11 +2,13 @@
     "models": [
         {
             "id": "lisa",
-            "weight": 1.0
+            "weight": 0.9333333333333333,
+            "balance": 1290
         },
         {
             "id": "leina",
-            "weight": 1.0
+            "weight": 0.9666666666666667,
+            "balance": 1255
         }
     ]
 }
